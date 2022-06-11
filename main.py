@@ -1,20 +1,15 @@
 from openpyxl import load_workbook
 
-# Номер колонки в файле ВБ (начиная с нуля)
-wb_sku_offset = 2
-wb_size_offset = 3
-
-
-# Номер колонки в нашем файле из внутренней системы
-supplier_sku_offset = 3
-supplier_size_offset = 4
-supplier_barcode_offset = 6
-
 
 def load_supplier_order(name="Spec__#1001629_11.06.2022.xlsx") -> dict:
     """
     А это расширенная версия нашего заказа, выгружена из внутренней системы
     """
+    # Номер колонки в нашем файле из внутренней системы (начиная с нуля)
+    supplier_sku_offset = 3
+    supplier_size_offset = 4
+    supplier_barcode_offset = 6
+
     wb = load_workbook(name)
     ws = wb.active
 
@@ -42,6 +37,11 @@ def load_wb_detalization(order, name="Детализация заказа 783281
     """
     Берем отсюда https://seller.wb.ru/supply-plan-upload/orders детализацию заказа
     """
+
+    # Номер колонки в файле ВБ (начиная с нуля)
+    wb_sku_offset = 2
+    wb_size_offset = 3
+
     wb = load_workbook(name)
     ws = wb.active
 
@@ -76,7 +76,7 @@ def print_output(order, suspicious):
     print(f"ТОЧНО НЕ НАЙДЕНЫ:")
     for o in solid_output:
         print(o)
-    print(f"НЕ НАЙДЕНЫ, НО У ВБ ЕСТЬ ПОХОЖИЕ РАЗМЕРЫ:")
+    print(f"НЕ НАЙДЕНЫ, НО У ВБ ЕСТЬ ПОХОЖИЕ РАЗМЕРЫ (ПРОВЕРИТЬ):")
     for o in possible_output:
         print(o)
 
