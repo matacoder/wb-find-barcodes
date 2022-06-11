@@ -1,5 +1,7 @@
 # Поиск незаведенных номенклатур для Wildberries
 
+<img src="https://raw.githubusercontent.com/matacoder/wb-find-barcodes/master/hooray.png">
+
 ## Почему?
 
 При создании большого количества новых номенклатур сайт ВБ может дать сбой и не завести часть размеров.
