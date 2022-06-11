@@ -1,9 +1,13 @@
 from openpyxl import load_workbook
 
 
-def load_supplier_order(name="Spec__#1001629_11.06.2022.xlsx") -> dict:
+def load_supplier_order(name="supplier_export.xlsx") -> dict:
     """
-    А это расширенная версия нашего заказа, выгружена из внутренней системы
+    Создаем словарь с артикулами и размерами поставщика, которые должны
+    были попасть в систему ВБ.
+    Расширенная версия нашего заказа, выгружена из внутренней системы.
+    У вас может отличаться в каком столбце артикул, размер и баркод, просто
+    укажите порядковый номер вашего шаблона, начиная с нуля.
     """
     # Номер колонки в нашем файле из внутренней системы (начиная с нуля)
     supplier_sku_offset = 3
@@ -33,12 +37,15 @@ def load_supplier_order(name="Spec__#1001629_11.06.2022.xlsx") -> dict:
     return found
 
 
-def load_wb_detalization(order, name="Детализация заказа 7832814.xlsx") -> dict:
+def load_wb_detalization(order, name="wb_order_export.xlsx") -> dict:
     """
-    Берем отсюда https://seller.wb.ru/supply-plan-upload/orders детализацию заказа
+    Это детализация заказа, место, где вб пишет, что есть товары, которые
+    он не обработал, но он не скажет нам их баркоды. Так что мучайтесь,
+    пишите вот такие скрипты :)
+    Берем отсюда https://seller.wb.ru/supply-plan-upload/orders детализация заказа
     """
 
-    # Номер колонки в файле ВБ (начиная с нуля)
+    # Номер колонки в файле ВБ (начиная с нуля) - как правило, это вам менять не надо
     wb_sku_offset = 2
     wb_size_offset = 3
 
@@ -57,6 +64,8 @@ def load_wb_detalization(order, name="Детализация заказа 783281
             if not order[sku]:
                 del order[sku]
         except KeyError:
+            # Иногда размер не совпадает с тем, как у нас во внутренней системе заведено,
+            # поэтому создаем отдельный словарь подозрительных артикулов.
             suspicious[sku] = suspicious.get(sku, list()) + [size]
 
     return suspicious
@@ -82,6 +91,8 @@ def print_output(order, suspicious):
 
 
 if __name__ == "__main__":
-    order = load_supplier_order()
-    suspicious = load_wb_detalization(order)
+    order = load_supplier_order("supplier_export.xlsx")
+    suspicious = load_wb_detalization(order, "wb_order_export.xlsx")
     print_output(order, suspicious)
+
+
